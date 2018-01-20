@@ -11,10 +11,10 @@ async def ex(args, message, client, invoke):
         return
 
 
-     messages = []
+      messages = []
             async for m in client.logs_from(message.channel, limit=ammount):
                messages.append(m)
                 await client.delete_messages(messages)
                 return_msg = await client.send_message(message.channel, "Deleted %s messages." % ammount)
-     await asyncio.sleep(4)
-     await client.delete_message(return_msg)
+               await asyncio.sleep(4)
+                  await client.delete_message(return_msg)

@@ -1,34 +1,29 @@
 import asyncio
 import discord
 import bla
-
+messages = []
 d = discord.Client()
 bananenbrot = "277083383425794058"
 vollkornbrot = "360859154249678858"
 admins = ["277083383425794058", "360859154249678858"]
 
 
-async def ex(args, message, d):
+async def ex(args, message, client, invoke):
+    client = d
     try:
         ammount = int(args[0]) + 1 if len(args) > 0 else 2
     except:
-        await d.send_message(message.channel, embed=discord.Embed(color=discord.Color.red(), descrition="Please enter a valid value for message ammount!"))
+        await client.send_message(message.channel, embed=discord.Embed(color=discord.Color.red(), descrition="Please enter a valid value for message ammount!"))
         return
 
-    cleared = 0
-    failed = 0
 
-    async for m in d.logs_from(message.channel, limit=ammount):
-        try:
-            await d.delete_message(m)
-            cleared += 1
-        except:
-            failed += 1
-            pass
-    return ammount
-ammount = 50
 
-messages = []
+    async for m in client.logs_from(message.channel, limit=ammount):
+        messages.append(m)
+        await client.delete_messages(messages)
+        return_msg = await client.send_message(message.channel, "Deleted %s messages." % ammount)
+        await asyncio.sleep(4)
+        await client.delete_message(return_msg)
 
 @d.event
 async def on_ready():
@@ -90,19 +85,7 @@ async def on_message(message):
 
                 d.delete_messages(messages=all())
     if message.content.startswith('.delete'):
-        async for m in d.logs_from(message.channel, limit=ammount):
-         messages.append(m)
-         await d.delete_messages(messages)
-         return_msg = await d.send_message(message.channel, "Deleted %s messages." % ammount)
-         await asyncio.sleep(4)
-         await d.delete_message(return_msg)
+        await d.send_message(message.channel, embed=discord.Embed(color=discord.Color.red(),descrition="Please enter a valid value for message ammount!"))
+
 d.run(bla.token)
-
-# messages = []
-#
-
-
-
-
-
 
